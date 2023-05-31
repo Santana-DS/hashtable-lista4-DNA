@@ -1,0 +1,56 @@
+'''
+EXTRA: A saída também apresenta quantas vezes a sequência se repetiu
+
+1. A ordem dos nucleotídeos não importa
+2. A quantidade dos nucleotídeos importa
+
+em cada subtring (sequencia), contamos a quantidade de cada um dos nucleotídeos
+caso seja a primeira contagem, a sequencia vira >referencia< para aquela contagem
+
+quando uma mesma contagem de nucleotideos se repete, é pq a sequência repetiu
+relacionamos-a à sequência de >referência<
+
+'''
+
+def encontra_repeticao(dna):
+    nucleotideos = {}
+    referencia = {}
+    repetiu = []
+
+    for i in range(len(dna) - 9):  # quantidade de substrings analisadas
+        sequencia = dna[i:i+10]
+        conta = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
+
+        for nucleotideo in sequencia:
+            conta[nucleotideo] += 1
+
+        contagem = (conta['A'], conta['C'], conta['G'], conta['T'])
+
+        if contagem in nucleotideos:
+            if nucleotideos[contagem] == 1:
+                repetiu.append(referencia[contagem])
+            nucleotideos[contagem] += 1
+        else:
+            nucleotideos[contagem] = 1
+            referencia[contagem] = sequencia   # determinamos a sequencia de referencia para a contagem
+    
+    quantas_vezes = []
+    for k, v in nucleotideos.items():
+        if v > 1:
+            quantas_vezes.append(f'A sequência {referencia[k]} repetiu {nucleotideos[k]} vezes.')
+    quantas_vezes = '\n'.join(quantas_vezes)
+
+    return f'{repetiu} \n{quantas_vezes} \n'
+    
+dna = "AAAAAAAAAAAAA"
+print(encontra_repeticao(dna))
+# Saída esperada: ["AAAAAAAAAA"]
+# A sequência AAAAAAAAAA repetiu 4 vezes.
+
+dna = "AAAAACCCCCAAAAGGGGCCTTTTG"
+print(encontra_repeticao(dna))
+# Saída esperada: ["AAAAACCCCC", "CCAAAAGGGG", "GGGGCCTTTT"]
+# A sequência AAAAACCCCC repetiu 5 vezes.
+# A sequência CCAAAAGGGG repetiu 3 vezes.
+# A sequência GGGGCCTTTT repetiu 2 vezes.
+
